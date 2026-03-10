@@ -11,6 +11,7 @@ variable "alert_email" {
 
 variable "customer_account_id" {
   type        = string
+  default     = "test-customer"
   description = "The 12-digit AWS Account ID to provision into"
 }
 
