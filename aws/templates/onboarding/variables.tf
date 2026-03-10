@@ -1,5 +1,6 @@
 variable "customer_name" {
   type        = string
+  default     = "test-customer"
   description = "The Legal Name of the Client (e.g., AcmeCorp)"
 }
 
