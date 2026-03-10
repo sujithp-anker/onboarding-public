@@ -5,6 +5,7 @@ variable "customer_name" {
 
 variable "alert_email" {
   type        = string
+  default     = "example@example.com"
   description = "Primary email for notifications"
 }
 
