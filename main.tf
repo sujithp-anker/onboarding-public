@@ -1,5 +1,5 @@
 module "sns" {
-  source = "modules/sns-alerts"
+  source = "./modules/sns-alerts"
   
   count  = var.enable_phase_1_alerts ? 1 : 0
 
