@@ -37,3 +37,33 @@ variable "ENABLE_PasswordPolicy" {
   default     = false
   description = "⚠️ Set 90-day password rotation policy (true/false) "
 }
+
+variable "SET_BudgetLimit" {
+  type        = string
+  default     = "100"
+  description = "Monthly limit in USD"
+}
+
+variable "ENABLE_BudgetThreshold_Actual_50" {
+  type        = bool
+  default     = false
+  description = "⚠️ Alert when actual spend hits 50% (true/false)"
+}
+
+variable "ENABLE_BudgetThreshold_Actual_75" {
+  type        = bool
+  default     = false
+  description = "⚠️ Alert when actual spend hits 75% (true/false)"
+}
+
+variable "ENABLE_BudgetThreshold_Actual_100" {
+  type        = bool
+  default     = true
+  description = "⚠️ Alert when actual spend hits 100% (true/false)"
+}
+
+variable "ENABLE_BudgetThreshold_Forecast_100" {
+  type        = bool
+  default     = false
+  description = "⚠️ Alert if forecasted spend hits 100% (true/false)"
+}
