@@ -14,7 +14,7 @@ variable "CrossAccountAssumeRoleARN" {
   description = "Cross Account IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab)"
 }
 
-variable "EnableAlerts" {
+variable "ENABLE_SNS_alerts" {
   type        = bool
   default     = false
   description = "⚠️ Deploy SNS Topic (true/false) "
@@ -26,13 +26,13 @@ variable "AlertEmail" {
   description = "Email for notifications (Required if EnableAlerts is true)"
 }
 
-variable "EnableMFAEnforcement" {
+variable "ENABLE_MFAEnforcement" {
   type        = bool
   default     = false
   description = "⚠️ Create MFA enforcement group (true/false); Users need to be added manually"
 }
 
-variable "EnablePasswordPolicy" {
+variable "ENABLE_PasswordPolicy" {
   type        = bool
   default     = false
   description = "⚠️ Set 90-day password rotation policy (true/false) "
