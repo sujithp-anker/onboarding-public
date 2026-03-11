@@ -17,7 +17,7 @@ variable "CrossAccountAssumeRoleARN" {
 variable "EnableAlerts" {
   type        = bool
   default     = false
-  description = "❌✅ Deploy SNS Topic (true/false) "
+  description = "⚠️ Deploy SNS Topic (true/false) "
 }
 
 variable "AlertEmail" {
@@ -29,11 +29,11 @@ variable "AlertEmail" {
 variable "EnableMFAEnforcement" {
   type        = bool
   default     = false
-  description = "❌✅ Create MFA enforcement group (true/false); Users need to be added manually"
+  description = "⚠️ Create MFA enforcement group (true/false); Users need to be added manually"
 }
 
 variable "EnablePasswordPolicy" {
   type        = bool
   default     = false
-  description = "❌✅ Set 90-day password rotation policy (true/false) "
+  description = "⚠️ Set 90-day password rotation policy (true/false) "
 }
