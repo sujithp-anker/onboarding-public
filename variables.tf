@@ -1,33 +1,33 @@
-variable "_00_customer_name" {
+variable "CustomerName" {
   type        = string
-  description = "IDENTITY: Legal Name of the Client"
+  description = "Name of the Client"
 }
 
-variable "_00_customer_account_id" {
+variable "CustomerAccountId" {
   type        = string
-  description = "IDENTITY: 12-digit AWS Account ID"
+  description = "12-digit AWS Account ID"
 }
 
-variable "_01_enable_alerts" {
+variable "EnableAlerts" {
   type        = bool
   default     = false
-  description = "ALERTS: (true/false) Deploy SNS Topic"
+  description = "Deploy SNS Topic (true/false) "
 }
 
-variable "_01_alert_email" {
+variable "AlertEmail" {
   type        = string
   default     = ""
-  description = "ALERTS: Email for notifications (Required if 01_enable is true)"
+  description = "Email for notifications (Required if EnableAlerts is true)"
 }
 
-variable "_02_enable_mfa_enforcement" {
+variable "EnableMFAEnforcement" {
   type        = bool
   default     = false
-  description = "IAM: (true/false) Create MFA enforcement group"
+  description = "Create MFA enforcement group (true/false)"
 }
 
-variable "_02_enable_password_policy" {
+variable "EnablePasswordPolicy" {
   type        = bool
   default     = false
-  description = "IAM: (true/false) Set 90-day password rotation policy"
+  description = "Set 90-day password rotation policy (true/false) "
 }
