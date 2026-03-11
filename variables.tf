@@ -29,7 +29,7 @@ variable "AlertEmail" {
 variable "ENABLE_MFAEnforcement" {
   type        = bool
   default     = false
-  description = "⚠️ Create MFA enforcement group (true/false); Users need to be added manually"
+  description = "⚠️ Create MFA enforcement group (true/false); Users need to be added to the group manually"
 }
 
 variable "ENABLE_PasswordPolicy" {
@@ -40,30 +40,18 @@ variable "ENABLE_PasswordPolicy" {
 
 variable "SET_BudgetLimit" {
   type        = string
-  default     = "100"
-  description = "Monthly limit in USD"
+  default     = ""
+  description = "Actual budget limit in USD. Leave blank to disable."
 }
 
-variable "ENABLE_BudgetThreshold_Actual_50" {
-  type        = bool
-  default     = false
-  description = "⚠️ Alert when actual spend hits 50% (true/false)"
+variable "SET_BudgetActualThresholds" {
+  type        = string
+  default     = "50,75,100"
+  description = "Enter percentages for ACTUAL spend alerts (comma separated). Leave blank to disable."
 }
 
-variable "ENABLE_BudgetThreshold_Actual_75" {
+variable "ENABLE_BudgetForecast100" {
   type        = bool
   default     = false
-  description = "⚠️ Alert when actual spend hits 75% (true/false)"
-}
-
-variable "ENABLE_BudgetThreshold_Actual_100" {
-  type        = bool
-  default     = false
-  description = "⚠️ Alert when actual spend hits 100% (true/false)"
-}
-
-variable "ENABLE_BudgetThreshold_Forecast_100" {
-  type        = bool
-  default     = false
-  description = "⚠️ Alert if forecasted spend hits 100% (true/false)"
+  description = "Enable alert for 100% FORECASTED spend? (true/false)"
 }
