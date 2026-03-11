@@ -41,7 +41,7 @@ variable "ENABLE_PasswordPolicy" {
 variable "SET_BudgetLimit" {
   type        = string
   default     = ""
-  description = "Actual budget limit in USD. Leave blank to disable"
+  description = "Actual budget limit in USD"
 }
 
 variable "SET_BudgetActualThresholds" {
