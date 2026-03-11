@@ -11,7 +11,7 @@ variable "CustomerAccountId" {
 variable "CrossAccountAssumeRoleARN" {
   type        = string
   default     = ""
-  description = "Cross IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab)"
+  description = "Cross Account IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab)"
 }
 
 variable "EnableAlerts" {
