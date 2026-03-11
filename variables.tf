@@ -47,11 +47,11 @@ variable "SET_BudgetLimit" {
 variable "SET_BudgetActualThresholds" {
   type        = string
   default     = ""
-  description = "Enter percentages for ACTUAL spend alerts (comma separated e.g 50,75,100). Leave blank to disable"
+  description = "⚠️ Enter percentages for ACTUAL spend alerts (comma separated e.g 50,75,100). Leave blank to disable"
 }
 
 variable "ENABLE_BudgetForecast100" {
   type        = bool
   default     = false
-  description = "Enable alert for 100% FORECASTED spend? (true/false)"
+  description = "⚠️ Enable alert for 100% FORECASTED spend? (true/false)"
 }
