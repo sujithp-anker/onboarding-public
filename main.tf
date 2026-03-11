@@ -1,6 +1,6 @@
 module "sns" {
   source = "./modules/sns-alerts"
-  count  = var.ENABLE_SNS_alerts ? 1 : 0
+  count  = var.ENABLE_SNSAlert ? 1 : 0
 
   customer_name = var.CustomerName
   alert_email   = var.AlertEmail
