@@ -1,8 +1,11 @@
 provider "aws" {
   region = "us-east-1"
 
-#   assume_role {
-#     role_arn     = "arn:aws:iam::${var.customer_account_id}:role/OrganizationAccountAccessRole"
-#     session_name = "OnboardingSession"
-#   }
+  dynamic "assume_role" {
+    for_each = var.CrossAccountAssumeRoleARN != "" ? [1] : []
+    content {
+      role_arn     = var.CrossAccountAssumeRoleARN
+      session_name = "OnboardingSession"
+    }
+  }
 }

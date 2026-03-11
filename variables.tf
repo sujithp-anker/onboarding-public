@@ -8,6 +8,12 @@ variable "CustomerAccountId" {
   description = "12-digit AWS Account ID"
 }
 
+variable "CrossAccountAssumeRoleARN" {
+  type        = string
+  default     = ""
+  description = "Cross IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab)"
+}
+
 variable "EnableAlerts" {
   type        = bool
   default     = false
