@@ -3,6 +3,6 @@ provider "aws" {
 
 #   assume_role {
 #     role_arn     = "arn:aws:iam::${var.customer_account_id}:role/OrganizationAccountAccessRole"
-#     session_name = "GaiaOnboardingSession"
+#     session_name = "OnboardingSession"
 #   }
 }

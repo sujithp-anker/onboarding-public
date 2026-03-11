@@ -23,7 +23,7 @@ variable "AlertEmail" {
 variable "EnableMFAEnforcement" {
   type        = bool
   default     = false
-  description = "Create MFA enforcement group (true/false)"
+  description = "Create MFA enforcement group (true/false); Users need to be added manually"
 }
 
 variable "EnablePasswordPolicy" {
