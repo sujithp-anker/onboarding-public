@@ -58,7 +58,7 @@ variable "ENABLE_BudgetThreshold_Actual_75" {
 
 variable "ENABLE_BudgetThreshold_Actual_100" {
   type        = bool
-  default     = true
+  default     = false
   description = "⚠️ Alert when actual spend hits 100% (true/false)"
 }
 
