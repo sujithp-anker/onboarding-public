@@ -55,3 +55,9 @@ variable "ENABLE_BudgetForecast100" {
   default     = false
   description = "⚠️ Enable alert for 100% FORECASTED spend? (true/false)"
 }
+
+variable "ENABLE_CloudTrailLogs" {
+  type        = bool
+  default     = false
+  description = "⚠️ Enable CloudTrail account-wide with 90-day retention (true/false) "
+}

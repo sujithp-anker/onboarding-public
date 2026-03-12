@@ -29,3 +29,11 @@ module "budget_alerts" {
   
   sns_topic_arn          = module.sns[0].sns_topic_arn
 }
+
+module "cloudtrail" {
+  source = "./modules/cloudtrail"
+  count  = var.ENABLE_CloudTrailLogs ? 1 : 0
+
+  customer_name = var.CustomerName
+  account_id    = var.CustomerAccountId
+}
