@@ -11,7 +11,7 @@ variable "CustomerAccountId" {
 variable "CrossAccountAssumeRoleARN" {
   type        = string
   default     = ""
-  description = "Cross Account IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab). \n Download and deploy the CFT stack to provision cross account role."
+  description = "Cross Account IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab). --- Download and deploy the CFT stack to provision cross account role."
 }
 
 variable "ENABLE_SNSAlert" {
