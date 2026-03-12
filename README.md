@@ -1,1 +1,1 @@
-# onboarding-public
+# AWS Onboarding Automation

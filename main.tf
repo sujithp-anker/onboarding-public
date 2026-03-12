@@ -37,3 +37,23 @@ module "cloudtrail" {
   customer_name = var.CustomerName
   account_id    = var.CustomerAccountId
 }
+
+module "ec2_backup" {
+  source = "./modules/ec2-backup"
+  
+  count  = var.ENABLE_EC2Backup ? 1 : 0
+
+  customer_name = var.CustomerName
+}
+
+module "ec2_governance" {
+  source = "./modules/ec2-governance"
+  
+  count  = var.ENABLE_StatusCheckAlarmsForInstances != "" ? 1 : 0
+
+  customer_name = var.CustomerName
+  
+  instance_ids  = split(",", replace(var.ENABLE_StatusCheckAlarmsForInstances, " ", ""))
+  
+  sns_topic_arn = module.sns[0].sns_topic_arn
+}
