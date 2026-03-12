@@ -23,7 +23,7 @@ variable "ENABLE_SNSAlert" {
 variable "AlertEmail" {
   type        = string
   default     = ""
-  description = "Email for notifications (Required if EnableAlerts is true)"
+  description = "Email for notifications (Required if ENABLE_SNSAlert is true)"
 }
 
 variable "ENABLE_MFAEnforcement" {
@@ -65,7 +65,7 @@ variable "ENABLE_CloudTrailLogs" {
 variable "ENABLE_EC2Backup" {
   type        = bool
   default     = false
-  description = "Create backup plan for prod-backup (7-days retention) and stg-backup (3-days retention) environment. Manually attach the tags with prod-backup/stg-backup with true values."
+  description = "Provisions a Backup Vault and Plan. Applies a 7-day retention policy to resources tagged prod-backup: true and a 3-day policy to those tagged stg-backup: true"
 }
 
 variable "ENABLE_StatusCheckAlarmsForInstances" {
