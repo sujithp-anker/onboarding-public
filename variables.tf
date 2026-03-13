@@ -95,7 +95,7 @@ variable "ENABLE_LBMonitoring" {
 variable "ENABLE_TGMonitoring" {
   type        = string
   default     = ""
-  description = "ELB MONITOR: Comma-separated list of Target Group names (e.g., 'tg-prod-app, tg-stage-app')."
+  description = "Comma-separated list of Target Group names (e.g., 'tg-prod-app, tg-stage-app')."
 }
 
 variable "EnvironmentTag" {
