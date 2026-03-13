@@ -16,7 +16,8 @@ variable "CrossAccountAssumeRoleARN" {
 
 variable "Region" { 
   type = string
-  default = "us-east-1" 
+  default = "us-east-1"
+  description = "AWS Region where the workloads are located"
 }
 
 variable "ENABLE_SNSAlert" {
@@ -100,5 +101,5 @@ variable "ENABLE_TGMonitoring" {
 variable "EnvironmentTag" {
   type        = string
   default     = "Stage"
-  description = "GENERAL: Used for retention logic. 'Prod' (30 days) or 'Stage' (7 days)."
+  description = "Used for retention logic. 'Prod' (30 days) or 'Stage' (7 days)."
 }
