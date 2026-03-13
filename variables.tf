@@ -14,6 +14,11 @@ variable "CrossAccountAssumeRoleARN" {
   description = "Cross Account IAM Role ARN to assume. Leave this blank if using credentials (Add them via Credentials tab)"
 }
 
+variable "Region" { 
+  type = string
+  default = "us-east-1" 
+}
+
 variable "ENABLE_SNSAlert" {
   type        = bool
   default     = false
@@ -72,4 +77,28 @@ variable "ENABLE_StatusCheckAlarmsForInstances" {
   type        = string
   default     = ""
   description = "Comma-separated list of existing Instance IDs to add Status Check Alarms"
+}
+
+variable "Enable_ELBLogsAnalyzeInfra" {
+  type        = bool
+  default     = false
+  description = "Create S3 Logging Bucket and Athena Analysis Database"
+}
+
+variable "ENABLE_LBMonitoring" {
+  type        = string
+  default     = ""
+  description = "Comma-separated list of existing ALB names (e.g., 'lb-prod, lb-stage')"
+}
+
+variable "ENABLE_TGMonitoring" {
+  type        = string
+  default     = ""
+  description = "ELB MONITOR: Comma-separated list of Target Group names (e.g., 'tg-prod-app, tg-stage-app')."
+}
+
+variable "EnvironmentTag" {
+  type        = string
+  default     = "Stage"
+  description = "GENERAL: Used for retention logic. 'Prod' (30 days) or 'Stage' (7 days)."
 }

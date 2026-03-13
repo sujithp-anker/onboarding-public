@@ -57,3 +57,27 @@ module "ec2_governance" {
   
   sns_topic_arn = module.sns[0].sns_topic_arn
 }
+
+module "load_balancer_infra" {
+  source = "./modules/load-balancer-infra"
+  count  = var.Enable_ELBLogsAnalyzeInfra ? 1 : 0
+
+  customer_name = var.CustomerName
+  account_id    = var.CustomerAccountId
+  region        = var.Region
+  environment   = var.EnvironmentTag
+  lb_names      = split(",", replace(var.ENABLE_LBMonitoring, " ", ""))
+}
+
+module "load_balancer_monitoring" {
+  source = "./modules/load-balancer-monitoring"
+  
+  count  = var.ENABLE_LBMonitoring != "" ? 1 : 0
+
+  customer_name = var.CustomerName
+  
+  lb_names      = split(",", replace(var.ENABLE_LBMonitoring, " ", ""))
+  tg_names      = split(",", replace(var.ENABLE_TGMonitoring, " ", ""))
+  
+  sns_topic_arn = module.sns[0].sns_topic_arn
+}

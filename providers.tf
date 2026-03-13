@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.Region
 
   dynamic "assume_role" {
     for_each = var.CrossAccountAssumeRoleARN != "" ? [1] : []
