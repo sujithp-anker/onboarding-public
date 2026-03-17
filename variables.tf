@@ -115,3 +115,21 @@ variable "VPCNames" {
   default     = ""
   description = "Comma-separated list of VPC Name tags (e.g., 'VPC-Prod, VPC-Stage')"
 }
+
+variable "ENABLE_RDSMonitoring" {
+  type        = string
+  default     = ""
+  description = "Comma-separated DB Instance Identifiers (e.g., mydb-prod, mydb-stage)"
+}
+
+# variable "DB_Family" {
+#   type        = string
+#   default     = "mysql8.0"
+#   description = "RDS: DB family for the parameter group (e.g., postgres15, mysql8.0)."
+#}
+
+variable "ENABLE_SecurityGroupAlerts" {
+  type        = bool
+  default     = false
+  description = "Alert if any Security Group opens ports other than 80/443 to the public (0.0.0.0/0)."
+}

@@ -90,3 +90,36 @@ module "vpc_governance" {
   vpc_names     = split(",", replace(var.VPCNames, " ", ""))
   environment   = var.EnvironmentTag
 }
+
+module "rds_monitoring" {
+  source = "./modules/rds-monitoring"
+  
+  count  = var.ENABLE_RDSMonitoring != "" ? 1 : 0
+
+  customer_name   = var.CustomerName
+  region          = var.Region
+  environment     = var.EnvironmentTag
+  sns_topic_arn   = module.sns[0].sns_topic_arn
+
+  db_instance_ids = split(",", replace(var.ENABLE_RDSMonitoring, " ", ""))
+}
+
+# module "rds_governance" {
+#   source = "./modules/rds-governance"
+  
+#   count  = var.Existing_RDS_IDs != "" ? 1 : 0
+
+#   customer_name   = var.CustomerName
+#   environment     = var.EnvironmentTag
+#   db_family       = var.DB_Family
+  
+#   db_instance_ids = split(",", replace(var.Existing_RDS_IDs, " ", ""))
+# }
+
+module "security_governance" {
+  source = "./modules/security-governance"
+  count  = var.ENABLE_SecurityGroupAlerts ? 1 : 0
+
+  customer_name = var.CustomerName
+  sns_topic_arn = module.sns[0].sns_topic_arn
+}
