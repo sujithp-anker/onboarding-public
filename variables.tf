@@ -20,6 +20,12 @@ variable "Region" {
   description = "AWS Region where the workloads are located"
 }
 
+variable "EnvironmentTag" {
+  type        = string
+  default     = "Stage"
+  description = "Used for retention logic. 'Prod' (30 days) or 'Stage' (7 days)."
+}
+
 variable "ENABLE_SNSAlert" {
   type        = bool
   default     = false
@@ -80,7 +86,7 @@ variable "ENABLE_StatusCheckAlarmsForInstances" {
   description = "Comma-separated list of existing Instance IDs to add Status Check Alarms"
 }
 
-variable "Enable_ELBLogsAnalyzeInfra" {
+variable "ENABLE_ELBLogsAnalyzeInfra" {
   type        = bool
   default     = false
   description = "Create S3 Logging Bucket and Athena Analysis Database"
@@ -95,11 +101,17 @@ variable "ENABLE_LBMonitoring" {
 variable "ENABLE_TGMonitoring" {
   type        = string
   default     = ""
-  description = "Comma-separated list of Target Group names (e.g., 'tg-prod-app, tg-stage-app')."
+  description = "Comma-separated list of Target Group names (e.g., 'tg-prod-app, tg-stage-app')"
 }
 
-variable "EnvironmentTag" {
+variable "EnableVPCFlowLogs" {
+  type        = bool
+  default     = false
+  description = "VPC: (true/false) Enable Flow Logs for the specified VPC Name"
+}
+
+variable "VPCNames" {
   type        = string
-  default     = "Stage"
-  description = "Used for retention logic. 'Prod' (30 days) or 'Stage' (7 days)."
+  default     = ""
+  description = "Comma-separated list of VPC Name tags (e.g., 'VPC-Prod, VPC-Stage')"
 }

@@ -60,7 +60,7 @@ module "ec2_governance" {
 
 module "load_balancer_infra" {
   source = "./modules/load-balancer-infra"
-  count  = var.Enable_ELBLogsAnalyzeInfra ? 1 : 0
+  count  = var.ENABLE_ELBLogsAnalyzeInfra ? 1 : 0
 
   customer_name = var.CustomerName
   account_id    = var.CustomerAccountId
@@ -80,4 +80,13 @@ module "load_balancer_monitoring" {
   tg_names      = split(",", replace(var.ENABLE_TGMonitoring, " ", ""))
   
   sns_topic_arn = module.sns[0].sns_topic_arn
+}
+
+module "vpc_governance" {
+  source = "./modules/vpc-governance"
+  count  = var.EnableVPCFlowLogs ? 1 : 0
+
+  customer_name = var.CustomerName
+  vpc_names     = split(",", replace(var.VPCNames, " ", ""))
+  environment   = var.EnvironmentTag
 }
