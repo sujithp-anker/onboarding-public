@@ -107,7 +107,7 @@ variable "ENABLE_TGMonitoring" {
 variable "EnableVPCFlowLogs" {
   type        = bool
   default     = false
-  description = "VPC: (true/false) Enable Flow Logs for the specified VPC Name"
+  description = "Enable Flow Logs for the specified VPC Names"
 }
 
 variable "VPCNames" {
