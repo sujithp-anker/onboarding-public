@@ -118,7 +118,7 @@ module "rds_monitoring" {
 
 module "security_governance" {
   source = "./modules/security-governance"
-  count  = var.ENABLE_SecurityGroupAlerts ? 1 : 0
+  count  = var.ENABLE_SecurityGroupAlerts_ACMExpiry ? 1 : 0
 
   customer_name = var.CustomerName
   sns_topic_arn = module.sns[0].sns_topic_arn

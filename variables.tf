@@ -128,8 +128,8 @@ variable "ENABLE_RDSMonitoring" {
 #   description = "RDS: DB family for the parameter group (e.g., postgres15, mysql8.0)."
 #}
 
-variable "ENABLE_SecurityGroupAlerts" {
+variable "ENABLE_SecurityGroupAlerts_ACMExpiry" {
   type        = bool
   default     = false
-  description = "Alert if any Security Group opens ports other than 80/443 to the public (0.0.0.0/0)."
+  description = "Alert if any Security Group opens ports other than 80/443 to the public (0.0.0.0/0) & ACM Expiry checks."
 }
