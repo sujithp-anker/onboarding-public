@@ -112,7 +112,7 @@ module "rds_monitoring" {
 #   customer_name   = var.CustomerName
 #   environment     = var.EnvironmentTag
 #   db_family       = var.DB_Family
-  
+
 #   db_instance_ids = split(",", replace(var.Existing_RDS_IDs, " ", ""))
 # }
 
