@@ -28,12 +28,25 @@ resource "aws_s3_bucket_policy" "allow_elb_logging" {
     Version = "2012-10-17"
     Statement = [
       {
+        Sid    = "AllowELBServiceAccount"
         Effect = "Allow"
         Principal = {
           AWS = data.aws_elb_service_account.main.arn
         }
         Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.elb_logs.arn}/AWSLogs/${var.account_id}/*"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.elb_logs.id}/ELBLogs/AWSLogs/${var.account_id}/*"
+      },
+      {
+        Sid    = "AllowLogDelivery"
+        Effect = "Allow"
+        Principal = {
+          Service = "logdelivery.elasticloadbalancing.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.elb_logs.id}/ELBLogs/AWSLogs/${var.account_id}/*"
+        Condition = {
+          StringEquals = { "s3:x-amz-acl" = "bucket-owner-full-control" }
+        }
       }
     ]
   })
@@ -91,6 +104,8 @@ TBLPROPERTIES (
     "projection.day.type" = "date",
     "projection.day.range" = "2024/01/01,NOW",
     "projection.day.format" = "yyyy/MM/dd",
+    "projection.day.interval" = "1",
+    "projection.day.interval.unit" = "DAYS",
     "storage.location.template" = "s3://${aws_s3_bucket.elb_logs.id}/ELBLogs/AWSLogs/${var.account_id}/elasticloadbalancing/${var.region}/$${day}"
 )
 EOF

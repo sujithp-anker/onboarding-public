@@ -54,3 +54,13 @@ resource "aws_iam_account_password_policy" "strict" {
   max_password_age               = 90
   password_reuse_prevention      = 3
 }
+
+resource "aws_accessanalyzer_analyzer" "governance" {
+  count         = var.enable_monitoring ? 1 : 0
+  analyzer_name = "${var.customer_name}-access-analyzer"
+  type          = "ACCOUNT"
+
+  tags = {
+    Name = "${var.customer_name}-access-analyzer"
+  }
+}

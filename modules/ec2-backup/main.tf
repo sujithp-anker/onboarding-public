@@ -6,20 +6,18 @@ resource "aws_backup_plan" "ec2_plan" {
   name = "${var.customer_name}-ec2-backup-plan"
 
   rule {
-    rule_name         = "Prod-7Day-Retention"
+    rule_name         = "Prod-7-Day-Retention"
     target_vault_name = aws_backup_vault.ec2_vault.name
     schedule          = "cron(0 5 * * ? *)"
-
     lifecycle {
       delete_after = 7
     }
   }
 
   rule {
-    rule_name         = "Stage-3Day-Retention"
+    rule_name         = "Stage-3-Day-Retention"
     target_vault_name = aws_backup_vault.ec2_vault.name
-    schedule          = "cron(0 5 * * ? *)" 
-
+    schedule          = "cron(0 5 * * ? *)"
     lifecycle {
       delete_after = 3
     }
@@ -27,7 +25,7 @@ resource "aws_backup_plan" "ec2_plan" {
 }
 
 resource "aws_backup_selection" "prod_selection" {
-  name         = "prod-selection"
+  name         = "${var.customer_name}-prod-selection"
   iam_role_arn = aws_iam_role.backup_role.arn
   plan_id      = aws_backup_plan.ec2_plan.id
 
@@ -39,7 +37,7 @@ resource "aws_backup_selection" "prod_selection" {
 }
 
 resource "aws_backup_selection" "stage_selection" {
-  name         = "stage-selection"
+  name         = "${var.customer_name}-stage-selection"
   iam_role_arn = aws_iam_role.backup_role.arn
   plan_id      = aws_backup_plan.ec2_plan.id
 
@@ -65,5 +63,10 @@ resource "aws_iam_role" "backup_role" {
 
 resource "aws_iam_role_policy_attachment" "backup_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+  role       = aws_iam_role.backup_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "restore_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
   role       = aws_iam_role.backup_role.name
 }

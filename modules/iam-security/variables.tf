@@ -14,3 +14,5 @@ variable "enable_password_policy" {
   default     = false
   description = "Whether to apply the 90-day password rotation policy to the account."
 }
+
+variable "enable_monitoring" { type = bool }

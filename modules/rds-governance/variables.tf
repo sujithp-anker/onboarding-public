@@ -29,3 +29,7 @@ variable "max_allocated_storage" {
   default     = 1000
   description = "Upper limit for storage autoscaling (in GB)."
 }
+
+variable "enable_alarms"   { type = bool }
+
+variable "sns_topic_arn"   { type = string }

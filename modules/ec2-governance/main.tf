@@ -1,6 +1,5 @@
-data "aws_instance" "selected" {
-  for_each    = toset(var.instance_ids)
-  instance_id = each.value
+resource "aws_ebs_encryption_by_default" "enabled" {
+  enabled = var.enable_ebs_encryption
 }
 
 resource "aws_cloudwatch_metric_alarm" "status_check_fail" {
@@ -14,9 +13,10 @@ resource "aws_cloudwatch_metric_alarm" "status_check_fail" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = "0"
-  alarm_description   = "Status check failed for existing instance: ${each.value}"
-  alarm_actions       = [var.sns_topic_arn]
-  ok_actions          = [var.sns_topic_arn]
+  alarm_description   = "Status check failed for instance: ${each.value}"
+  
+  alarm_actions       = var.sns_topic_arn != "" ? [var.sns_topic_arn] : []
+  ok_actions          = var.sns_topic_arn != "" ? [var.sns_topic_arn] : []
 
   dimensions = {
     InstanceId = each.value

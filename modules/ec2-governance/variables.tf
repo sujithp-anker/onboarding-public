@@ -12,3 +12,5 @@ variable "sns_topic_arn" {
   type        = string
   description = "The ARN of the SNS topic for alerts."
 }
+
+variable "enable_ebs_encryption" { type = bool }

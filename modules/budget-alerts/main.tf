@@ -4,10 +4,11 @@ resource "aws_budgets_budget" "monthly_cost_budget" {
   limit_amount      = var.budget_limit
   limit_unit        = "USD"
   time_unit         = "MONTHLY"
-  time_period_start = "2026-01-01_00:00"
+  
+  time_period_start = formatdate("YYYY-MM-DD_hh:mm", timestamp())
 
   dynamic "notification" {
-    for_each = var.actual_thresholds != "" ? split(",", var.actual_thresholds) : []
+    for_each = (var.actual_thresholds != "" && var.sns_topic_arn != "") ? split(",", var.actual_thresholds) : []
     content {
       comparison_operator       = "GREATER_THAN"
       threshold                 = trimspace(notification.value)
@@ -18,7 +19,7 @@ resource "aws_budgets_budget" "monthly_cost_budget" {
   }
 
   dynamic "notification" {
-    for_each = var.enable_forecasted_100 ? [1] : []
+    for_each = (var.enable_forecasted_100 && var.sns_topic_arn != "") ? [1] : []
     content {
       comparison_operator       = "GREATER_THAN"
       threshold                 = 100
@@ -38,8 +39,9 @@ resource "aws_budgets_budget" "monthly_cost_budget" {
     include_support            = true
     include_tax                = true
     include_upfront            = true
-    
-    use_amortized              = false
-    use_blended                = false
+  }
+
+  lifecycle {
+    ignore_changes = [time_period_start]
   }
 }

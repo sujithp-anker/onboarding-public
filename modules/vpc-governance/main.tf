@@ -7,8 +7,8 @@ data "aws_vpc" "selected" {
 }
 
 resource "aws_cloudwatch_log_group" "flow_log" {
-  for_each          = toset(var.vpc_names)
-  name              = "/aws/vpc/flow-logs/${each.value}"
+  for_each = toset(var.vpc_names)
+  name              = "/aws/vpc/flow-logs/${var.customer_name}-${each.value}"
   retention_in_days = var.environment == "Prod" ? 30 : 7
 }
 
@@ -33,20 +33,19 @@ resource "aws_iam_role_policy" "vpc_flow_log_policy" {
     Version = "2012-10-17"
     Statement = [{
       Action = [
-        "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams"
       ]
       Effect   = "Allow"
-      Resource = "*"
+      Resource = [for lg in aws_cloudwatch_log_group.flow_log : "${lg.arn}:*"]
     }]
   })
 }
 
 resource "aws_flow_log" "main" {
-  for_each         = toset(var.vpc_names)
+  for_each = toset(var.vpc_names)
   
   iam_role_arn    = aws_iam_role.vpc_flow_log_role.arn
   log_destination = aws_cloudwatch_log_group.flow_log[each.value].arn
@@ -54,7 +53,8 @@ resource "aws_flow_log" "main" {
   vpc_id          = data.aws_vpc.selected[each.value].id
 
   tags = {
-    Name        = "${each.value}-flow-logs"
+    Name        = "${var.customer_name}-${each.value}-flow-logs"
     Environment = var.environment
+    ManagedBy   = "Gaia-Onboarding"
   }
 }
