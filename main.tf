@@ -22,14 +22,6 @@ module "security_governance" {
   sns_topic_arn = module.sns[0].sns_topic_arn
 }
 
-module "public_port_alerts" {
-  source = "./modules/public-port-alerts"
-  count  = (var.ENABLE_PublicPortAlerts && var.EnableMonitoring) ? 1 : 0
-
-  customer_name = var.CustomerName
-  sns_topic_arn = module.sns[0].sns_topic_arn
-}
-
 module "s3_governance" {
   source = "./modules/s3-governance"
   count  = var.ENABLE_S3_Governance != "" ? 1 : 0
