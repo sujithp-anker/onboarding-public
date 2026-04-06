@@ -110,12 +110,6 @@ variable "RDS_Instance_IDs" {
   description = "List of Database IDs (comma-separated) for performance alerts and backups."
 }
 
-variable "DB_Family" {
-  type        = string
-  default     = "mysql8.0"
-  description = "The database type (e.g., mysql8.0 or postgres14)."
-}
-
 variable "Enable_VPC_FlowLogs" {
   type        = bool
   default     = false
