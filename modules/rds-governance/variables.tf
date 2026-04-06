@@ -13,11 +13,6 @@ variable "environment" {
   description = "Used to determine backup retention (Prod: 35d, Stage: 7d)."
 }
 
-variable "db_family" {
-  type        = string
-  description = "The engine family for the parameter group (e.g., 'mysql8.0', 'postgres14')."
-}
-
 variable "enable_storage_autoscaling" {
   type        = bool
   default     = true

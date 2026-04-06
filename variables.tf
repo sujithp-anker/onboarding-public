@@ -1,7 +1,3 @@
-# ==========================================
-# 01: CUSTOMER & GLOBAL SETTINGS
-# ==========================================
-
 variable "CustomerName" {
   type        = string
   description = "The name of the client (e.g., 'AcmeCorp'). Used to name all new resources."
@@ -29,10 +25,6 @@ variable "EnableMonitoring" {
   default     = true
   description = "Turn OFF (false) to stop alerts and emails."
 }
-
-# ==========================================
-# 02: NOTIFICATIONS & SECURITY
-# ==========================================
 
 variable "ENABLE_SNSAlert" {
   type        = bool
@@ -75,10 +67,6 @@ variable "ENABLE_CloudTrailLogs" {
   default     = false
   description = "Enable to keep a 90-day record of every action taken in the AWS account."
 }
-
-# ==========================================
-# 03: SERVERS & DATABASES
-# ==========================================
 
 variable "ENABLE_EC2Backup" {
   type        = bool
@@ -127,10 +115,6 @@ variable "DB_Family" {
   default     = "mysql8.0"
   description = "The database type (e.g., mysql8.0 or postgres14)."
 }
-
-# ==========================================
-# 04: NETWORK & BILLING
-# ==========================================
 
 variable "Enable_VPC_FlowLogs" {
   type        = bool

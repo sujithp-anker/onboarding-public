@@ -94,7 +94,6 @@ module "rds_governance" {
 
   customer_name   = var.CustomerName
   environment     = var.EnvironmentTag
-  db_family       = var.DB_Family
   db_instance_ids = split(",", replace(var.RDS_Instance_IDs, " ", ""))
   
   enable_alarms   = var.EnableMonitoring
