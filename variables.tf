@@ -26,10 +26,10 @@ variable "EnableMonitoring" {
   description = "Turn OFF (false) to stop alerts and emails."
 }
 
-variable "ENABLE_SNSAlert" {
-  type        = bool
-  default     = false
-  description = "Enable this to create a central alert system."
+variable "Alert_Emails" {
+  description = "List of email addresses to receive alerts."
+  type    = string
+  default = ""
 }
 
 variable "AlertEmail" {

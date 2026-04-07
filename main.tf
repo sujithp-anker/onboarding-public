@@ -1,9 +1,8 @@
-module "sns" {
-  source = "./modules/sns-alerts"
-  count  = (var.ENABLE_SNSAlert && var.EnableMonitoring) ? 1 : 0
-
+module "sns_alerts" {
+  source      = "./modules/sns_alerts"
+  
   customer_name = var.CustomerName
-  alert_email   = var.AlertEmail
+  alert_emails  = var.Alert_Emails
 }
 
 module "iam_security" {
