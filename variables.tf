@@ -14,7 +14,7 @@ variable "Region" {
   description = "The AWS Region where the servers and databases are located."
 }
 
-variable "EnvironmentTag" {
+variable "Environment" {
   type        = string
   default     = "Stage"
   description = "Set to 'Prod' for 30-day backups/logs, or 'Stage' for 7-day backups/logs."
@@ -26,16 +26,22 @@ variable "EnableMonitoring" {
   description = "Turn OFF (false) to stop alerts and emails."
 }
 
-variable "Alert_Emails" {
+variable "AlertEmails" {
   description = "List of email addresses to receive alerts."
   type    = string
   default = ""
 }
 
-variable "ENABLE_IAM_Governance" {
+variable "EnablePasswordRotation" {
   type        = bool
   default     = false
-  description = "Enable to enforce 90-day passwords and scan for shared resources."
+  description = "Enable to enforce 90-day passwords account-wide for IAM users."
+}
+
+variable "EnableIAMAccessAnalyzer" {
+  type        = bool
+  default     = false
+  description = "Enable to turn on IAM Access Analyzer to scan shared resources."
 }
 
 variable "ENABLE_S3_Governance" {

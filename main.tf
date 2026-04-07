@@ -5,12 +5,12 @@ module "sns_alerts" {
   alert_emails  = var.Alert_Emails
 }
 
-module "iam_security" {
+module "iam_governance" {
   source = "./modules/iam-security"
-  count  = var.ENABLE_IAM_Governance ? 1 : 0
 
-  customer_name     = var.CustomerName
-  enable_monitoring = var.EnableMonitoring
+  customer_name              = var.CustomerName
+  enable_password_rotation   = var.EnablePasswordRotation
+  enable_iam_access_analyzer = var.EnableIAMAccessAnalyzer
 }
 
 module "security_governance" {
@@ -26,7 +26,7 @@ module "s3_governance" {
   count  = var.ENABLE_S3_Governance != "" ? 1 : 0
 
   customer_name   = var.CustomerName
-  environment     = var.EnvironmentTag
+  environment     = var.Environment
   s3_bucket_names = split(",", replace(var.ENABLE_S3_Governance, " ", ""))
 }
 
@@ -43,7 +43,7 @@ module "vpc_governance" {
   count  = var.Enable_VPC_FlowLogs ? 1 : 0
 
   customer_name = var.CustomerName
-  environment   = var.EnvironmentTag
+  environment   = var.Environment
   vpc_names     = split(",", replace(var.VPCNames, " ", ""))
 }
 
@@ -52,7 +52,7 @@ module "ec2_backup" {
   count  = var.ENABLE_EC2Backup ? 1 : 0
 
   customer_name = var.CustomerName
-  environment   = var.EnvironmentTag
+  environment   = var.Environment
 }
 
 module "ec2_monitoring" {
@@ -73,7 +73,7 @@ module "load_balancer_infra" {
   customer_name = var.CustomerName
   account_id    = var.CustomerAccountId
   region        = var.Region
-  environment   = var.EnvironmentTag
+  environment   = var.Environment
   lb_names      = split(",", replace(var.LB_Names_to_Monitor, " ", ""))
 }
 
@@ -92,7 +92,7 @@ module "rds_governance" {
   count  = var.RDS_Instance_IDs != "" ? 1 : 0
 
   customer_name   = var.CustomerName
-  environment     = var.EnvironmentTag
+  environment     = var.Environment
   db_instance_ids = split(",", replace(var.RDS_Instance_IDs, " ", ""))
   
   enable_alarms   = var.EnableMonitoring
