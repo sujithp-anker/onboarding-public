@@ -32,12 +32,6 @@ variable "Alert_Emails" {
   default = ""
 }
 
-variable "AlertEmail" {
-  type        = string
-  default     = ""
-  description = "The email address where all alerts will be sent."
-}
-
 variable "ENABLE_IAM_Governance" {
   type        = bool
   default     = false
