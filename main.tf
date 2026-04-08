@@ -1,8 +1,8 @@
 module "sns_alerts" {
-  source      = "./modules/sns_alerts"
+  source      = "./modules/sns-alerts"
   
   customer_name = var.CustomerName
-  alert_emails  = var.Alert_Emails
+  alert_email  = var.AlertEmails
 }
 
 module "iam_governance" {
