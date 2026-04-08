@@ -63,7 +63,7 @@ module "ec2_monitoring" {
 
   customer_name = var.CustomerName
   instance_ids  = split(",", replace(var.Instance_IDs_to_Monitor, " ", ""))
-  sns_topic_arn = module.alerts[0].sns_topic_arn
+  sns_topic_arn = module.alerts.sns_topic_arn
   
   enable_ebs_encryption = var.ENABLE_EBS_Default_Encryption
 }
@@ -95,7 +95,7 @@ module "load_balancer_monitoring" {
   customer_name = var.CustomerName
   lb_names      = split(",", replace(var.LB_Names_to_Monitor, " ", ""))
   tg_names      = split(",", replace(var.TG_Names_to_Monitor, " ", ""))
-  sns_topic_arn = module.alerts[0].sns_topic_arn
+  sns_topic_arn = module.alerts.sns_topic_arn
 }
 
 module "rds_governance" {
@@ -107,7 +107,7 @@ module "rds_governance" {
   db_instance_ids = split(",", replace(var.RDS_Instance_IDs, " ", ""))
   
   enable_alarms   = var.EnableMonitoring
-  sns_topic_arn   = var.EnableMonitoring ? module.alerts[0].sns_topic_arn : ""
+  sns_topic_arn   = var.EnableMonitoring ? module.alerts.sns_topic_arn : ""
 }
 
 module "budget_alerts" {
@@ -118,5 +118,5 @@ module "budget_alerts" {
   budget_limit          = var.SET_BudgetLimit
   actual_thresholds     = var.SET_BudgetActualThresholds
   enable_forecasted_100 = var.ENABLE_BudgetForecast100
-  sns_topic_arn         = module.alerts[0].sns_topic_arn
+  sns_topic_arn         = module.alerts.sns_topic_arn
 }
