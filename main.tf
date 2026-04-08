@@ -63,7 +63,7 @@ module "ec2_monitoring" {
 
   customer_name = var.CustomerName
   instance_ids  = split(",", replace(var.Instance_IDs_to_Monitor, " ", ""))
-  sns_topic_arn = module.sns[0].sns_topic_arn
+  sns_topic_arn = module.alerts[0].sns_topic_arn
   
   enable_ebs_encryption = var.ENABLE_EBS_Default_Encryption
 }
