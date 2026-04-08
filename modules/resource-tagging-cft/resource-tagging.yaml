@@ -1,0 +1,308 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AWS auto tagging solution to add CreatedBy and CreatedAt tags to resources.
+
+Parameters:
+  AutomationTags:
+    Type: String
+    Default: '{}'
+    Description: 'Optional additional static tags in JSON format. Example: {"Project": "Alpha"}'
+
+  LambdaAutoTaggingFunctionName:
+    Type: String
+    Description: Name of the lambda-Ayto-Tagging-Function-Name
+    Default: resource-tagging-automation-function
+
+  EventBridgeRuleName:
+    Type: String
+    Description: Name of the EventBridge Rules
+    Default: resource-tagging-automation-rules
+
+  IAMAutoTaggingRoleName:
+    Type: String
+    Description: IAM role name for lambda
+    Default: resource-tagging-automation-role
+
+  IAMAutoTaggingPolicyName:
+    Type: String
+    Description: IAM customed managed policy
+    Default: resource-tagging-automation-policy
+  
+  TrailName:
+    Type: String
+    Description: Name of the Cloudtrail to record events
+    Default: resource-tagging-automation-trail
+
+  TrailS3Bucket:
+    Type: String
+    Description: Optional existing S3 bucket name for CloudTrail logs. Leave blank to create new bucket.
+    Default: ''
+
+Conditions:
+  CreateTrailBucket: !Equals [!Ref TrailS3Bucket, '']
+
+Resources:
+  TrailBucket:
+    Type: 'AWS::S3::Bucket'
+    Condition: CreateTrailBucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Join [ "-", ["tagging-log", !Select [2, !Split [ "/", !Ref 'AWS::StackId']]]]
+
+  TrailBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: CreateTrailBucket
+    DependsOn: TrailBucket
+    Properties:
+      Bucket: !Ref TrailBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: AWSCloudTrailAclCheck
+          Effect: Allow
+          Principal:
+            Service: 'cloudtrail.amazonaws.com'
+          Action: 's3:GetBucketAcl'
+          Resource: !Sub 'arn:aws:s3:::${TrailBucket}'
+        - Sid: AWSCloudTrailWrite
+          Effect: Allow
+          Principal:
+            Service: 'cloudtrail.amazonaws.com'
+          Action: 's3:PutObject'
+          Resource: !Sub 'arn:aws:s3:::${TrailBucket}/AWSLogs/${AWS::AccountId}/*'
+          Condition:
+            StringEquals:
+              's3:x-amz-acl': 'bucket-owner-full-control'
+
+  Trail:
+    Type: AWS::CloudTrail::Trail
+    Properties:
+      S3BucketName: !If [CreateTrailBucket, !Ref TrailBucket, !Ref TrailS3Bucket]
+      IsLogging: true
+      TrailName: !Ref TrailName
+      EnableLogFileValidation: false
+      IncludeGlobalServiceEvents: true
+      IsMultiRegionTrail: true
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+        - PolicyName: !Ref IAMAutoTaggingPolicyName
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:TagResource'
+                  - 'dynamodb:DescribeTable'
+                  - 'lambda:TagResource'
+                  - 'lambda:ListTags'
+                  - 's3:GetBucketTagging'
+                  - 's3:PutBucketTagging'
+                  - 'ec2:CreateTags'
+                  - 'ec2:DescribeNatGateways'
+                  - 'ec2:DescribeInternetGateways'
+                  - 'ec2:DescribeVolumes'
+                  - 'rds:AddTagsToResource'
+                  - 'rds:DescribeDBInstances'
+                  - 'sns:TagResource'
+                  - 'sqs:ListQueueTags'
+                  - 'sqs:TagQueue'
+                  - 'es:AddTags'
+                  - 'kms:ListResourceTags'
+                  - 'kms:TagResource'
+                  - 'elasticfilesystem:TagResource'
+                  - 'elasticfilesystem:CreateTags'
+                  - 'elasticfilesystem:DescribeTags'
+                  - 'elasticloadbalancing:AddTags'
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 'redshift:CreateTags'
+                  - 'redshift-serverless:TagResource'
+                  - 'sagemaker:AddTags'
+                  - 'ecs:TagResource'
+                  - 'kafka:TagResource'
+                  - 'logs:TagLogGroup'
+                  - 'cloudwatch:TagResource'
+                  - 'mq:CreateTags'
+                  - 'tag:getResources'
+                  - 'tag:getTagKeys'
+                  - 'tag:getTagValues'
+                  - 'tag:TagResources'
+                  - 'tag:UntagResources'
+                  - 'cloudformation:DescribeStacks'
+                  - 'cloudformation:ListStackResources'
+                  - 'resource-groups:*'
+                Resource: '*'
+
+  LambdaAutoTagging:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt LambdaExecutionRole.Arn 
+      Code:
+        ZipFile: |
+              import boto3
+              import os
+              import json
+
+              def aws_ec2(event):
+                  arnList = []
+                  _account = event['account']
+                  _region = event['region']
+                  ec2ArnTemplate = 'arn:aws:ec2:@region@:@account@:instance/@instanceId@'
+                  volumeArnTemplate = 'arn:aws:ec2:@region@:@account@:volume/@volumeId@'
+                  ec2_resource = boto3.resource('ec2')
+                  if event['detail']['eventName'] == 'RunInstances':
+                      for item in event['detail']['responseElements']['instancesSet']['items']:
+                          _instanceId = item['instanceId']
+                          arnList.append(ec2ArnTemplate.replace('@region@', _region).replace('@account@', _account).replace('@instanceId@', _instanceId))
+                          _instance = ec2_resource.Instance(_instanceId)
+                          for volume in _instance.volumes.all():
+                              arnList.append(volumeArnTemplate.replace('@region@', _region).replace('@account@', _account).replace('@volumeId@', volume.id))
+                  elif event['detail']['eventName'] == 'CreateVolume':
+                      _volumeId = event['detail']['responseElements']['volumeId']
+                      arnList.append(volumeArnTemplate.replace('@region@', _region).replace('@account@', _account).replace('@volumeId@', _volumeId))
+                  return arnList
+                  
+              def aws_elasticloadbalancing(event):
+                  if event['detail']['eventName'] == 'CreateLoadBalancer':
+                      return [lb['loadBalancerArn'] for lb in event['detail']['responseElements']['loadBalancers']]
+
+              def aws_rds(event):
+                  if event['detail']['eventName'] == 'CreateDBInstance':
+                      return [event['detail']['responseElements']['dBInstanceArn']]
+
+              def aws_s3(event):
+                  if event['detail']['eventName'] == 'CreateBucket':
+                      return ['arn:aws:s3:::' + event['detail']['requestParameters']['bucketName']]
+                      
+              def aws_lambda(event):
+                  if event['detail']['eventName'] == 'CreateFunction20150331':
+                      return [event['detail']['responseElements']['functionArn']]
+
+              def aws_dynamodb(event):
+                  if event['detail']['eventName'] == 'CreateTable':
+                      return [event['detail']['responseElements']['tableDescription']['tableArn']]
+                      
+              def aws_kms(event):
+                  if event['detail']['eventName'] == 'CreateKey':
+                      return [event['detail']['responseElements']['keyMetadata']['arn']]
+                      
+              def aws_sns(event):
+                  if event['detail']['eventName'] == 'CreateTopic':
+                      topic = event['detail']['requestParameters']['name']
+                      return [f"arn:aws:sns:{event['region']}:{event['account']}:{topic}"]
+                      
+              def aws_sqs(event):
+                  if event['detail']['eventName'] == 'CreateQueue':
+                      queue = event['detail']['requestParameters']['queueName']
+                      return [f"arn:aws:sqs:{event['region']}:{event['account']}:{queue}"]
+                      
+              def aws_elasticfilesystem(event):
+                  if event['detail']['eventName'] == 'CreateMountTarget':
+                      efs_id = event['detail']['responseElements']['fileSystemId']
+                      return [f"arn:aws:elasticfilesystem:{event['region']}:{event['account']}:file-system/{efs_id}"]
+                      
+              def aws_es(event):
+                  if event['detail']['eventName'] == 'CreateDomain':
+                      return [event['detail']['responseElements']['domainStatus']['aRN']]
+
+              def aws_kafka(event):
+                  if event['detail']['eventName'] == 'CreateClusterV2':
+                      return [event['detail']['responseElements']['clusterArn']]
+
+              def aws_ecs(event):
+                  if event['detail']['eventName'] == 'CreateCluster':
+                      return [event['detail']['responseElements']['cluster']['clusterArn']]
+
+              def aws_logs(event):
+                  if event['detail']['eventName'] == 'CreateLogGroup':
+                      log_name = event['detail']['requestParameters']['logGroupName']
+                      return [f"arn:aws:logs:{event['region']}:{event['account']}:log-group:{log_name}"]
+
+              def aws_monitoring(event):
+                  if event['detail']['eventName'] == 'PutMetricAlarm':
+                      alarm = event['detail']['requestParameters']['alarmName']
+                      return [f"arn:aws:cloudwatch:{event['region']}:{event['account']}:alarm:{alarm}"]
+
+              def aws_amazonmq(event):
+                  if event['detail']['eventName'] == 'CreateBroker':
+                      return [event['detail']['responseElements']['brokerArn']]
+
+              def aws_redshift(event):
+                  if event['detail']['eventName'] == 'CreateCluster':
+                      rid = event['detail']['requestParameters']['clusterIdentifier']
+                      return [f"arn:aws:redshift:{event['region']}:{event['account']}:cluster:{rid}"]
+
+              def aws_sagemaker(event):
+                  res = event['detail']['responseElements']
+                  for key in ['notebookInstanceArn', 'processingJobArn', 'endpointArn', 'domainArn', 'modelArn', 'labelingJobArn', 'trainingJobArn', 'transformJobArn', 'userProfileArn', 'workteamArn']:
+                      if key in res: return [res[key]]
+
+              def main(event, context):
+                  print("Processing event:", event['id'])
+                  method_name = event['source'].replace('.', "_").replace('-', "_")
+                  
+                  # Get resources to tag
+                  resARNs = globals().get(method_name, lambda x: [])(event)
+                  if not resARNs: return {'statusCode': 200, 'body': 'No resources found to tag'}
+
+                  # Extract Identity and Time
+                  user_id = event.get('detail', {}).get('userIdentity', {})
+                  creator = user_id.get('userName') or user_id.get('principalId', 'Unknown').split(':')[-1]
+                  created_at = event['detail'].get('eventTime', 'Unknown')
+
+                  # Prepare Tags
+                  res_tags = json.loads(os.environ.get('tags', '{}'))
+                  res_tags['CreatedBy'] = creator
+                  res_tags['CreatedAt'] = created_at
+
+                  print(f"Applying tags {res_tags} to {resARNs}")
+                  
+                  client = boto3.client('resourcegroupstaggingapi')
+                  client.tag_resources(ResourceARNList=resARNs, Tags=res_tags)
+
+                  return {'statusCode': 200, 'body': f'Successfully tagged {len(resARNs)} resources'}
+
+      FunctionName: !Ref LambdaAutoTaggingFunctionName
+      Handler: index.main
+      Runtime: python3.10
+      Timeout: 300
+      Environment:
+        Variables:
+          tags: !Ref AutomationTags
+
+  EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Rules to filtering events
+      Name: !Ref EventBridgeRuleName
+      EventPattern: 
+        detail-type: ["AWS API Call via CloudTrail"]
+        detail:
+          eventSource: ["ec2.amazonaws.com", "elasticloadbalancing.amazonaws.com", "s3.amazonaws.com", "rds.amazonaws.com", "lambda.amazonaws.com", "dynamodb.amazonaws.com", "elasticfilesystem.amazonaws.com", "es.amazonaws.com", "sqs.amazonaws.com", "sns.amazonaws.com", "kms.amazonaws.com","redshift.amazonaws.com", "redshift-serverless.amazonaws.com", "sagemaker.amazonaws.com", "ecs.amazonaws.com", "monitoring.amazonaws.com", "logs.amazonaws.com", "kafka.amazonaws.com", "amazonmq.amazonaws.com"]
+          eventName: ["RunInstances", "CreateFunction20150331", "CreateBucket", "CreateDBInstance", "CreateTable", "CreateVolume", "CreateLoadBalancer", "CreateMountTarget", "CreateDomain", "CreateQueue", "CreateTopic", "CreateKey", "CreateCluster", "CreateNamespace", "CreateWorkgroup", "CreateNotebookInstance", "CreateProcessingJob", "CreateEndpoint", "CreateDomain", "CreateModel", "CreateLabelingJob", "CreateTrainingJob", "CreateTransformJob", "CreateUserProfile", "CreateWorkteam", "PutMetricAlarm", "CreateLogGroup", "CreateClusterV2", "CreateBroker"]
+      Targets:
+        - Arn: !GetAtt LambdaAutoTagging.Arn
+          Id: !Ref LambdaAutoTaggingFunctionName
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref "LambdaAutoTaggingFunctionName"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt EventBridgeRule.Arn

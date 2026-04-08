@@ -77,7 +77,7 @@ variable "EnableCloudTrailLogs" {
 variable "ENABLE_EC2Backup" {
   type        = bool
   default     = false
-  description = "Enable automated backups for servers with the 'backup' tag."
+  description = "Enable automated backups for servers with the 'backup' tag. Attach 'prod-backup' or 'stg-backup' with 'true' value."
 }
 
 variable "ENABLE_EBS_Default_Encryption" {
@@ -126,6 +126,12 @@ variable "VPCNames" {
   type        = string
   default     = ""
   description = "List of VPC Name tags (comma-separated) to enable traffic logging."
+}
+
+variable "EnableResourceTagging" {
+  description = "If true, deploys the CloudFormation stack for auto-tagging CreatedBy and CreatedAt."
+  type        = bool
+  default     = false
 }
 
 variable "SET_BudgetLimit" {

@@ -120,3 +120,11 @@ module "budget_alerts" {
   enable_forecasted_100 = var.ENABLE_BudgetForecast100
   sns_topic_arn         = module.alerts.sns_topic_arn
 }
+
+module "resource_tagging" {
+  source = "./modules/resource-tagging-cft"
+
+  customer_name                      = var.CustomerName  
+  enable_resource_tagging_automation = var.EnableResourceTagging
+
+}
