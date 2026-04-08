@@ -44,25 +44,31 @@ variable "EnableIAMAccessAnalyzer" {
   description = "Enable to turn on IAM Access Analyzer to scan shared resources."
 }
 
-variable "ENABLE_S3_Governance" {
-  type        = string
-  default     = ""
-  description = "List of bucket names (comma-separated) to secure and encrypt."
-}
+# variable "ENABLE_S3_Governance" {
+#   type        = string
+#   default     = ""
+#   description = "List of bucket names (comma-separated) to secure and encrypt."
+# }
 
-variable "ENABLE_SecurityAuditing" {
+variable "EnableSSLExpiryAlerts" {
   type        = bool
   default     = false
-  description = "Enable to monitor SSL certificate expiry and AWS service outages."
+  description = "Enable to monitor SSL certificate expiry, notify before 30 days."
 }
 
-variable "ENABLE_PublicPortAlerts" {
+variable "EnableHealthDashboard" {
+  type        = bool
+  default     = false
+  description = "Enable Health Dashboard to monitor AWS service changes and outages."
+}
+
+variable "EnablePublicPortsAlerts" {
   type        = bool
   default     = false
   description = "Alert if any server ports (other than 80/443) are opened to the public."
 }
 
-variable "ENABLE_CloudTrailLogs" {
+variable "EnableCloudTrailLogs" {
   type        = bool
   default     = false
   description = "Enable to keep a 90-day record of every action taken in the AWS account."

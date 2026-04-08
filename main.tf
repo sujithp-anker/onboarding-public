@@ -13,26 +13,28 @@ module "iam_governance" {
   enable_iam_access_analyzer = var.EnableIAMAccessAnalyzer
 }
 
-module "security_governance" {
+module "monitoring" {
   source = "./modules/security-governance"
-  count  = (var.ENABLE_SecurityAuditing && var.EnableMonitoring) ? 1 : 0
 
-  customer_name = var.CustomerName
-  sns_topic_arn = module.sns[0].sns_topic_arn
+  customer_name            = var.CustomerName
+  enable_ssl_expiry_alerts = var.EnableSSLExpiryAlerts
+  enable_health_dashboard  = var.EnableHealthDashboard
+  
+  sns_topic_arn            = module.alerts.sns_topic_arn 
 }
 
-module "s3_governance" {
-  source = "./modules/s3-governance"
-  count  = var.ENABLE_S3_Governance != "" ? 1 : 0
+# module "s3_governance" {
+#   source = "./modules/s3-governance"
+#   count  = var.ENABLE_S3_Governance != "" ? 1 : 0
 
-  customer_name   = var.CustomerName
-  environment     = var.Environment
-  s3_bucket_names = split(",", replace(var.ENABLE_S3_Governance, " ", ""))
-}
+#   customer_name   = var.CustomerName
+#   environment     = var.Environment
+#   s3_bucket_names = split(",", replace(var.ENABLE_S3_Governance, " ", ""))
+# }
 
 module "cloudtrail" {
   source = "./modules/cloudtrail"
-  count  = var.ENABLE_CloudTrailLogs ? 1 : 0
+  count  = var.EnableCloudTrailLogs ? 1 : 0
 
   customer_name = var.CustomerName
   account_id    = var.CustomerAccountId
@@ -64,6 +66,15 @@ module "ec2_monitoring" {
   sns_topic_arn = module.sns[0].sns_topic_arn
   
   enable_ebs_encryption = var.ENABLE_EBS_Default_Encryption
+}
+
+module "governance" {
+  source = "./modules/publicport-alerts"
+
+  customer_name              = var.CustomerName
+  sns_topic_arn              = module.alerts.sns_topic_arn
+  
+  enable_public_ports_alerts = var.EnablePublicPortsAlerts 
 }
 
 module "load_balancer_infra" {
