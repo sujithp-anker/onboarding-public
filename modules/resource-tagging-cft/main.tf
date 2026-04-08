@@ -4,7 +4,7 @@ resource "aws_cloudformation_stack" "resource_tagging" {
   name          = "${var.customer_name}-resource-tagging-stack"
   capabilities  = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
   
-  template_body = file("./resource_tagging.yaml")
+  template_body = file("${path.module}/resource_tagging.yaml")
 
   parameters = {
     LambdaAutoTaggingFunctionName = "${var.customer_name}-tagging-function"
