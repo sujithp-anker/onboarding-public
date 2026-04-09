@@ -1,5 +1,8 @@
 module "alerts" {
   source        = "./modules/sns-alerts"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   customer_name = var.CustomerName
   alert_email   = var.EnableMonitoring ? var.AlertEmails : ""
@@ -7,6 +10,9 @@ module "alerts" {
 
 module "iam_governance" {
   source                     = "./modules/iam-security"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   customer_name              = var.CustomerName
   enable_password_rotation   = var.EnablePasswordRotation
@@ -15,6 +21,9 @@ module "iam_governance" {
 
 module "monitoring" {
   source                   = "./modules/security-governance"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   customer_name            = var.CustomerName
   enable_ssl_expiry_alerts = var.EnableSSLExpiryAlerts
@@ -24,6 +33,9 @@ module "monitoring" {
 
 module "cloudtrail" {
   source        = "./modules/cloudtrail"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.EnableCloudTrailLogs ? 1 : 0
   customer_name = var.CustomerName
@@ -32,6 +44,9 @@ module "cloudtrail" {
 
 module "vpc_governance" {
   source        = "./modules/vpc-governance"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.Enable_VPC_FlowLogs ? 1 : 0
   customer_name = var.CustomerName
@@ -41,6 +56,9 @@ module "vpc_governance" {
 
 module "ec2_backup" {
   source        = "./modules/ec2-backup"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.EnableEC2Backup ? 1 : 0
   customer_name = var.CustomerName
@@ -49,6 +67,9 @@ module "ec2_backup" {
 
 module "ec2_monitoring" {
   source        = "./modules/ec2-governance"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.Instance_IDs_to_Monitor != "" ? 1 : 0
   customer_name         = var.CustomerName
@@ -71,6 +92,9 @@ module "governance" {
 
 module "load_balancer_infra" {
   source        = "./modules/load-balancer-infra"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.ENABLE_ELB_Logging_Infra ? 1 : 0
   customer_name = var.CustomerName
@@ -82,6 +106,9 @@ module "load_balancer_infra" {
 
 module "load_balancer_monitoring" {
   source        = "./modules/load-balancer-monitoring"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.LB_Names_to_Monitor != "" ? 1 : 0
 
@@ -93,6 +120,9 @@ module "load_balancer_monitoring" {
 
 module "rds_monitoring" {
   source        = "./modules/rds-monitoring"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.RDS_Instance_IDs != "" ? 1 : 0
 
@@ -105,6 +135,9 @@ module "rds_monitoring" {
 
 module "rds_governance" {
   source = "./modules/rds-governance"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count         = var.RDS_Instance_IDs != "" ? 1 : 0
 
@@ -115,6 +148,9 @@ module "rds_governance" {
 
 module "budget_alerts" {
   source                = "./modules/budget-alerts"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   count                 = var.SET_BudgetLimit != "" ? 1 : 0
 
@@ -127,6 +163,9 @@ module "budget_alerts" {
 
 module "resource_tagging" {
   source                             = "./modules/resource-tagging-cft"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   customer_name                      = var.CustomerName  
   enable_resource_tagging_automation = var.EnableResourceTagging
