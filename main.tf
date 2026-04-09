@@ -57,6 +57,7 @@ module "governance" {
   customer_name              = var.CustomerName
   enable_public_ports_alerts = var.EnablePublicPortsAlerts 
   sns_topic_arn              = var.EnableMonitoring ? module.alerts.sns_topic_arn : ""
+  region = var.Region
 }
 
 module "load_balancer_infra" {
