@@ -1,4 +1,3 @@
 provider "aws" {
-  alias  = "main"
-  region = var.Region
+  region = "eu-central-1"
 }
