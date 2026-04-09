@@ -1,5 +1,5 @@
-# provider "aws" {
-#   region = var.Region
+provider "aws" {
+  region = var.Region
 
 #   dynamic "assume_role" {
 #     for_each = var.CrossAccountAssumeRoleARN != "" ? [1] : []
@@ -8,4 +8,4 @@
 #       session_name = "OnboardingSession"
 #     }
 #   }
-# }
+}
