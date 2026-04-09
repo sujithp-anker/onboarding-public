@@ -74,7 +74,7 @@ variable "EnableCloudTrailLogs" {
   description = "Enable to keep a 90-day record of every action taken in the AWS account."
 }
 
-variable "ENABLE_EC2Backup" {
+variable "EnableEC2Backup" {
   type        = bool
   default     = false
   description = "Enable automated backups for servers with the 'backup' tag. Attach 'prod-backup' or 'stg-backup' with 'true' value."

@@ -36,7 +36,7 @@ module "vpc_governance" {
 
 module "ec2_backup" {
   source        = "./modules/ec2-backup"
-  count         = var.ENABLE_EC2Backup ? 1 : 0
+  count         = var.EnableEC2Backup ? 1 : 0
   customer_name = var.CustomerName
   environment   = var.Environment
 }
