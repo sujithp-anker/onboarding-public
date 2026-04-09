@@ -1,4 +1,4 @@
-# 🚀 AWS Governance & Monitoring Stack
+# 🚀 AWS Customer Onboarding & Offboarding Automation
 
 This project implements a **non-destructive** governance layer over existing AWS accounts. It adopts monitoring for resources (EC2, RDS, VPC, Load Balancers) without managing their lifecycle. Running `terraform destroy` will only remove the monitoring and logging configurations, leaving the core infrastructure untouched.
 
