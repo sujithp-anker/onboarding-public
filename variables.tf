@@ -10,7 +10,7 @@ variable "CustomerAccountId" {
 
 variable "Region" { 
   type        = string
-  default     = "us-east-1"
+  default     = ""
   description = "The AWS Region where the servers and databases are located."
 }
 
