@@ -59,6 +59,9 @@ module "ec2_monitoring" {
 
 module "governance" {
   source                     = "./modules/publicport-alerts"
+  providers = {
+    aws = aws.onboarding 
+  }
   
   customer_name              = var.CustomerName
   enable_public_ports_alerts = var.EnablePublicPortsAlerts 
