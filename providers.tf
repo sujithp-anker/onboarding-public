@@ -1,11 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 provider "aws" {
   region = var.Region
-
-#   dynamic "assume_role" {
-#     for_each = var.CrossAccountAssumeRoleARN != "" ? [1] : []
-#     content {
-#       role_arn     = var.CrossAccountAssumeRoleARN
-#       session_name = "OnboardingSession"
-#     }
-#   }
 }
