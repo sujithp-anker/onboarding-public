@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.Region
+}
+
 module "alerts" {
   source        = "./modules/sns-alerts"
   customer_name = var.CustomerName
@@ -56,9 +69,6 @@ module "governance" {
   customer_name              = var.CustomerName
   enable_public_ports_alerts = var.EnablePublicPortsAlerts 
   sns_topic_arn              = var.EnableMonitoring ? module.alerts.sns_topic_arn : ""
-  providers = {
-    aws = aws
-  }
 }
 
 module "load_balancer_infra" {
