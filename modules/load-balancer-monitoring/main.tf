@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 data "aws_lb_target_group" "selected" {
   for_each = toset(var.tg_names)
   name     = each.value

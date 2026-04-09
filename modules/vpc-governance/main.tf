@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 data "aws_vpc" "selected" {
   for_each = toset(var.vpc_names)
   filter {

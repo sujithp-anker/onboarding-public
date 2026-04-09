@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_sns_topic" "alerts" {
   count = var.alert_email != "" ? 1 : 0
   name  = "${var.customer_name}-alerts"

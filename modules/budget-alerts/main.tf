@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_budgets_budget" "monthly_cost_budget" {
   name              = "${var.customer_name}-monthly-cost-budget"
   budget_type       = "COST"

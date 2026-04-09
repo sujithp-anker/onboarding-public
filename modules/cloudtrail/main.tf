@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_cloudwatch_log_group" "trail_logs" {
   name              = "/aws/cloudtrail/${var.customer_name}-trail"
   retention_in_days = 90

@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_ebs_encryption_by_default" "enabled" {
   enabled = var.enable_ebs_encryption
 }

@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_backup_vault" "ec2_vault" {
   name = "${var.customer_name}-ec2-backup-vault"
 }
