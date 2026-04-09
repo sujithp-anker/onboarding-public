@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 data "aws_db_instance" "selected" {
   for_each               = toset(var.db_instance_ids)
   db_instance_identifier = each.value

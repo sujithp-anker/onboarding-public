@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 resource "null_resource" "safe_rds_governance" {
   for_each = toset(var.db_instance_ids)
 

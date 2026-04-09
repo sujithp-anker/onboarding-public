@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 resource "aws_cloudformation_stack" "resource_tagging" {
   count = var.enable_resource_tagging_automation ? 1 : 0
 

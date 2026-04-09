@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 data "aws_s3_bucket" "selected" {
   for_each = toset(var.s3_bucket_names)
   bucket   = each.value

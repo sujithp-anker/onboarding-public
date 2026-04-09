@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 resource "aws_iam_account_password_policy" "strict" {
   count = var.enable_password_rotation ? 1 : 0
 
