@@ -98,16 +98,17 @@ module "load_balancer_monitoring" {
   sns_topic_arn = module.alerts.sns_topic_arn
 }
 
-module "rds_governance" {
-  source = "./modules/rds-governance"
-  count  = var.RDS_Instance_IDs != "" ? 1 : 0
+module "rds_monitoring" {
+  source = "./modules/rds-monitoring"
+  
+  count = var.RDS_Instance_IDs != "" ? 1 : 0
 
   customer_name   = var.CustomerName
+  region          = var.Region
   environment     = var.Environment
-  db_instance_ids = split(",", replace(var.RDS_Instance_IDs, " ", ""))
+  sns_topic_arn   = module.sns.sns_topic_arn
   
-  enable_alarms   = var.EnableMonitoring
-  sns_topic_arn   = var.EnableMonitoring ? module.alerts.sns_topic_arn : ""
+  db_instance_ids = compact(split(",", replace(var.RDS_Instance_IDs, " ", "")))
 }
 
 module "budget_alerts" {
