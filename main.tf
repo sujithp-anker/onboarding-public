@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.Region
-}
-
 module "alerts" {
   source        = "./modules/sns-alerts"
   customer_name = var.CustomerName
