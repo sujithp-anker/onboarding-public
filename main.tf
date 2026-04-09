@@ -89,6 +89,15 @@ module "rds_monitoring" {
   db_instance_ids = compact(split(",", replace(var.RDS_Instance_IDs, " ", "")))
 }
 
+module "rds_governance" {
+  source = "./modules/rds-governance"
+  count         = var.RDS_Instance_IDs != "" ? 1 : 0
+
+  environment = var.Environment
+  region = var.Region
+  db_instance_ids = compact(split(",", replace(var.RDS_Instance_IDs, " ", "")))
+}
+
 module "budget_alerts" {
   source                = "./modules/budget-alerts"
   count                 = var.SET_BudgetLimit != "" ? 1 : 0

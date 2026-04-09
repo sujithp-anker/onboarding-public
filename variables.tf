@@ -113,7 +113,13 @@ variable "TG_Names_to_Monitor" {
 variable "RDS_Instance_IDs" {
   type        = string
   default     = ""
-  description = "List of Database IDs (comma-separated) for performance alerts (CPU/Mem/Disk) and backups."
+  description = "List of Database IDs (comma-separated) for performance alerts (CPU/Mem/Disk)."
+}
+
+variable "EnableRDSBackups" {
+  type = bool
+  default = false
+  description = "Enable to turn on backups for the instances mentioned in RDS_Instance_IDs. "
 }
 
 variable "Enable_VPC_FlowLogs" {

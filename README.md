@@ -60,6 +60,15 @@ This is a master toggle for **alert notifications**.
 
 ---
 
+### 🗄️ RDS Governance (Non-Destructive)
+The stack uses the AWS CLI to "patch" existing databases with enterprise standards.
+* **Storage Autoscaling**: Automatically enabled up to the `max_allocated_storage` limit.
+* **Deletion Protection**: Enabled to prevent accidental database removal.
+* **Backup Retention**: Set to 35 days (Prod) or 7 days (Stage).
+* **Zero Downtime**: All changes use the `--no-apply-immediately` flag. Modifications will only be applied during the RDS instance's next scheduled **Maintenance Window**.
+
+---
+
 ## ⚠️ Important Notes
 
 * **Tagging Dependency**: VPCs and Load Balancers must have a `Name` tag in the AWS Console to be discovered by this stack.
