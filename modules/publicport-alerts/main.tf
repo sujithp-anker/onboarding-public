@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+  }
+}
+
 resource "aws_config_config_rule" "public_port_check" {
   count       = var.enable_public_ports_alerts ? 1 : 0
   name        = "${var.customer_name}-public-port-check"
