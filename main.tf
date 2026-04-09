@@ -44,7 +44,6 @@ module "ec2_backup" {
 module "ec2_monitoring" {
   source        = "./modules/ec2-governance"
   count         = var.Instance_IDs_to_Monitor != "" ? 1 : 0
-
   customer_name         = var.CustomerName
   instance_ids          = compact(split(",", replace(var.Instance_IDs_to_Monitor, " ", "")))
   sns_topic_arn         = var.EnableMonitoring ? module.alerts.sns_topic_arn : ""
