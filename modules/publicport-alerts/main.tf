@@ -19,7 +19,7 @@ resource "aws_cloudwatch_event_rule" "public_port_violation" {
   name        = "${var.customer_name}-public-port-violation"
   description = "Triggers when a Security Group is found with unauthorized public ports"
   region = var.region
-  
+
 
   event_pattern = jsonencode({
     source      = ["aws.config"]
