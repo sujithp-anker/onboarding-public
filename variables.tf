@@ -8,6 +8,12 @@ variable "CustomerAccountId" {
   description = "The 12-digit AWS Account ID (e.g., 123456789012)."
 }
 
+variable "CrossAccountRoleArn" {
+  type        = string
+  description = "The ARN of the role to assume in the target account"
+  default     = ""
+}
+
 variable "Region" { 
   type        = string
   default     = ""
