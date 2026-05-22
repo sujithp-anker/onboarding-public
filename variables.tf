@@ -154,7 +154,7 @@ variable "SET_BudgetLimit" {
 
 variable "SET_BudgetActualThresholds" {
   type        = string
-  default     = "50,75,100"
+  default     = "75, 80, 100"
   description = "Alert when spending reaches these percentages (e.g., 50, 75, 100)."
 }
 

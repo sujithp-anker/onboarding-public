@@ -24,7 +24,7 @@ resource "aws_config_config_rule" "acm_expiration_check" {
   }
 
   input_parameters = jsonencode({
-    daysToExpiration = var.acm_days_to_expiration
+    daysToExpiration = coalesce(var.acm_days_to_expiration, "30")
   })
 }
 
